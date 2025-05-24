@@ -3,6 +3,7 @@ package sistemaacademico;
 import java.util.Scanner;
 import sistemaacademico.controle.GerenciadorAlunos;
 import sistemaacademico.controle.GerenciadorDisciplinas;
+import sistemaacademico.controle.GerenciadorAvaliacoes;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,6 +11,7 @@ public class Main {
 
         GerenciadorAlunos gerenciadorAlunos = new GerenciadorAlunos();
         GerenciadorDisciplinas gerenciadorDisciplina = new GerenciadorDisciplinas();
+        GerenciadorAvaliacoes gerenciadorAvaliacoes = new GerenciadorAvaliacoes();
 
         int opcao;
 
@@ -21,7 +23,7 @@ public class Main {
             System.out.println("0. Sair");
             System.out.print("Escolha: ");
             opcao = scanner.nextInt();
-            scanner.nextLine(); // consumir o \n
+            scanner.nextLine(); // consumir o \n deixado pelo nextInt
 
             switch (opcao) {
                 case 1:
@@ -31,7 +33,7 @@ public class Main {
                     menuDisciplinas(scanner, gerenciadorDisciplina);
                     break;
                 case 3:
-                    System.out.println("Funcionalidade em desenvolvimento.");
+                    menuAvaliacoes(scanner, gerenciadorAvaliacoes, gerenciadorDisciplina);
                     break;
                 case 0:
                     System.out.println("Encerrando...");
@@ -104,5 +106,32 @@ public class Main {
                     System.out.println("Opção inválida.");
             }
         } while (opcaoDisc != 0);
+    }
+
+    private static void menuAvaliacoes(Scanner scanner, GerenciadorAvaliacoes gerenciadorAvaliacoes, GerenciadorDisciplinas gerenciadorDisciplinas) {
+    int opcaoAvaliacao;
+    do {
+        System.out.println("\n=== MENU AVALIAÇÕES ===");
+        System.out.println("1. Registrar avaliação");
+        System.out.println("2. Listar avaliações");
+        System.out.println("0. Voltar");
+        System.out.print("Escolha: ");
+        opcaoAvaliacao = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcaoAvaliacao) {
+            case 1:
+                gerenciadorAvaliacoes.registrarAvaliacao(scanner, gerenciadorDisciplinas.getTurmas());
+                break;
+            case 2:
+                gerenciadorAvaliacoes.listarAvaliacoes();
+                break;
+            case 0:
+                System.out.println("Voltando ao menu principal...");
+                break;
+            default:
+                System.out.println("Opção inválida.");
+        }
+    } while (opcaoAvaliacao != 0);
     }
 }

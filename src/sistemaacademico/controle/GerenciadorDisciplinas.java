@@ -87,4 +87,9 @@ public class GerenciadorDisciplinas {
             }
         }
     }
+
+    // Método para expor a lista de turmas para outras classes (ex: GerenciadorAvaliacoes)
+    public List<Turma> getTurmas() {
+        return turmas;
+    }
 }
