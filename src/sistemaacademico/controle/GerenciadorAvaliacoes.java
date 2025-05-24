@@ -53,13 +53,23 @@ public class GerenciadorAvaliacoes {
 
         Aluno aluno = alunosMatriculados.get(opcaoAluno - 1);
 
+        // Checa se já existe avaliação para este aluno e disciplina
+        boolean jaAvaliado = avaliacoes.stream()
+            .anyMatch(a -> a.getNomeAluno().equals(aluno.getNome()) 
+                        && a.getCodigoDisciplina().equals(turma.getDisciplina().getCodigo()));
+
+        if (jaAvaliado) {
+            System.out.println("Avaliação para este aluno e disciplina já foi registrada.");
+            return;
+        }
+
         System.out.print("Digite a média final do aluno: ");
         double mediaFinal = scanner.nextDouble();
         System.out.print("Digite a frequência do aluno (porcentagem): ");
         double frequencia = scanner.nextDouble();
         scanner.nextLine();
 
-        // Exemplo de regra simples para aprovação
+        // Regra simples para aprovação
         boolean aprovado = (mediaFinal >= 6.0) && (frequencia >= 75.0);
 
         if (aprovado) {
@@ -69,7 +79,7 @@ public class GerenciadorAvaliacoes {
             System.out.println("Aluno não foi aprovado.");
         }
 
-        // Salva avaliação na lista
+        // Salva avaliação
         Avaliacao avaliacao = new Avaliacao(aluno.getNome(), turma.getDisciplina().getCodigo(), mediaFinal, frequencia);
         avaliacoes.add(avaliacao);
     }
