@@ -1,12 +1,19 @@
 package sistemaacademico.controle;
 
+import sistemaacademico.modelo.Professor;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import sistemaacademico.modelo.Professor;
 
 public class GerenciadorProfessor {
-    private List<Professor> professores = new ArrayList<>();
+    private List<Professor> professores;
+    private static final String ARQUIVO_PROFESSORES = "professores.dat";
+
+    public GerenciadorProfessor() {
+        this.professores = carregarProfessores();
+    }
 
     // Cadastrar novo professor
     public void cadastrarProfessor(Scanner scanner) {
@@ -39,6 +46,7 @@ public class GerenciadorProfessor {
 
         Professor professor = new Professor(nome, matricula, area);
         professores.add(professor);
+        salvarDados();
 
         System.out.println("Professor cadastrado com sucesso!");
     }
@@ -91,10 +99,52 @@ public class GerenciadorProfessor {
             professor.setDepartamento(novaArea);
         }
 
+        salvarDados();
         System.out.println("Dados atualizados com sucesso!");
     }
 
-    // Getter para lista de professores (se precisar usar em outros lugares)
+    // Persistência: salvar dados
+    public void salvarDados() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQUIVO_PROFESSORES))) {
+            oos.writeObject(professores);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar professores: " + e.getMessage());
+        }
+    }
+    @SuppressWarnings("unchecked")
+    // Persistência: carregar dados
+    public List<Professor> carregarProfessores() {
+        File arquivo = new File(ARQUIVO_PROFESSORES);
+        if (!arquivo.exists()) {
+            return new ArrayList<>();
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
+            Object obj = ois.readObject();
+            if (obj instanceof List) {
+                return (List<Professor>) obj;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar professores: " + e.getMessage());
+        }
+
+        return new ArrayList<>();
+    }
+
+    public void removerProfessor(Scanner scanner) {
+    System.out.print("Digite a matrícula do professor a ser removido: ");
+    String matricula = scanner.nextLine().trim();
+    Professor professor = buscarProfessorPorMatricula(matricula);
+    if (professor == null) {
+        System.out.println("Professor não encontrado.");
+        return;
+    }
+    professores.remove(professor);
+    salvarDados();
+    System.out.println("Professor removido com sucesso!");
+}
+
+    // Getter para lista de professores
     public List<Professor> getProfessores() {
         return professores;
     }

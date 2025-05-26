@@ -1,27 +1,33 @@
 package sistemaacademico.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Turma {
+public class Turma implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Disciplina disciplina;
-    private Professor professor;  // Alterado para objeto Professor
+    private Professor professor;
     private String semestre;
     private String formaAvaliacao; // "simples" ou "ponderada"
     private boolean presencial;
     private String sala;
     private String horario;
     private int capacidadeMaxima;
-    private String codigo; 
+    private String codigo;
 
     private List<Aluno> alunosMatriculados;
     private List<Double[]> notas; // Array de notas por aluno (P1, P2, P3, L, S)
     private List<Integer> presencas; // porcentagem de presença por aluno (0 a 100)
+    private Map<Aluno, Boolean> trancamento; // aluno -> true se trancou
 
     public Turma(Disciplina disciplina, Professor professor, String semestre, String formaAvaliacao,
                  boolean presencial, String sala, String horario, int capacidadeMaxima) {
         this.disciplina = disciplina;
-        this.professor = professor; // recebe o objeto Professor
+        this.professor = professor;
         this.semestre = semestre;
         this.formaAvaliacao = formaAvaliacao;
         this.presencial = presencial;
@@ -31,19 +37,29 @@ public class Turma {
         this.alunosMatriculados = new ArrayList<>();
         this.notas = new ArrayList<>();
         this.presencas = new ArrayList<>();
+        this.trancamento = new HashMap<>();
         this.codigo = disciplina.getCodigo() + "-" + semestre;
     }
 
     public boolean matricularAluno(Aluno aluno) {
         if (alunosMatriculados.size() >= capacidadeMaxima) return false;
         if (aluno instanceof AlunoEspecial && aluno.getTurmasMatriculadas().size() >= aluno.getLimiteDisciplinas()) {
-        return false;
-}
+            return false;
+        }
 
         alunosMatriculados.add(aluno);
         notas.add(new Double[]{0.0, 0.0, 0.0, 0.0, 0.0});
         presencas.add(0);
+        trancamento.put(aluno, false); // inicia como não trancada
         return true;
+    }
+
+    public void trancar(Aluno aluno) {
+        trancamento.put(aluno, true);
+    }
+
+    public boolean isTrancada(Aluno aluno) {
+        return trancamento.getOrDefault(aluno, false);
     }
 
     public double calcularMediaFinal(Double[] notas) {
@@ -60,7 +76,7 @@ public class Turma {
         return media >= 5.0;
     }
 
-    // Getters e setters (inclusive do professor)
+    // Getters e Setters
 
     public List<Aluno> getAlunosMatriculados() {
         return alunosMatriculados;
@@ -102,13 +118,14 @@ public class Turma {
         return capacidadeMaxima;
     }
 
-    @Override
-    public String toString() {
-        return "Turma de " + disciplina.getNome() + " com " + 
-               (professor != null ? professor.getNome() : "Sem professor") + 
-               " no semestre " + semestre + " [" + (presencial ? "Presencial" : "Remota") + "]";
-    }
     public String getCodigo() {
         return codigo;
+    }
+
+    @Override
+    public String toString() {
+        return "Turma de " + disciplina.getNome() + " com " +
+               (professor != null ? professor.getNome() : "Sem professor") +
+               " no semestre " + semestre + " [" + (presencial ? "Presencial" : "Remota") + "]";
     }
 }

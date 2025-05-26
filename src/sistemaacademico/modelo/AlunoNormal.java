@@ -2,8 +2,8 @@ package sistemaacademico.modelo;
 
 public class AlunoNormal extends Aluno {
 
-    public AlunoNormal(String nome, String matricula, String curso) {
-        super(nome, matricula, curso);
+    public AlunoNormal(String nome, String matricula, String curso, String semestreAtual) {
+        super(nome, matricula, curso, semestreAtual);
     }
 
     @Override

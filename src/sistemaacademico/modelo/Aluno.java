@@ -1,32 +1,43 @@
 package sistemaacademico.modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Aluno {
+public abstract class Aluno implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     protected String nome;
     protected String matricula;
     protected String curso;
+    protected String semestreAtual;
     protected List<Disciplina> disciplinasAprovadas = new ArrayList<>();
     protected List<Turma> turmasMatriculadas = new ArrayList<>();
+    protected List<Turma> turmasTrancadas = new ArrayList<>();
 
-    public Aluno(String nome, String matricula, String curso) {
+    public Aluno(String nome, String matricula, String curso, String semestreAtual) {
         this.nome = nome;
         this.matricula = matricula;
         this.curso = curso;
+        this.semestreAtual = semestreAtual;
     }
 
-    // Getters já existentes
+    // Getters e setters
     public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
     public String getMatricula() { return matricula; }
+
     public String getCurso() { return curso; }
     public void setCurso(String curso) { this.curso = curso; }
+
+    public String getSemestreAtual() { return semestreAtual; }
+    public void setSemestreAtual(String semestreAtual) { this.semestreAtual = semestreAtual; }
 
     public List<Disciplina> getDisciplinasAprovadas() {
         return disciplinasAprovadas;
     }
 
-    // Método para adicionar disciplina aprovada
     public void adicionarDisciplinaAprovada(Disciplina disciplina) {
         if (!disciplinasAprovadas.contains(disciplina)) {
             disciplinasAprovadas.add(disciplina);
@@ -36,12 +47,9 @@ public abstract class Aluno {
     public abstract boolean podeReceberNota();
     public abstract int getLimiteDisciplinas();
 
-    public void setNome(String nome) {
-    this.nome = nome;
-}
     public List<Turma> getTurmasMatriculadas() {
-    return turmasMatriculadas;
-}
+        return turmasMatriculadas;
+    }
 
     public void adicionarTurma(Turma turma) {
         if (!turmasMatriculadas.contains(turma)) {
@@ -49,6 +57,18 @@ public abstract class Aluno {
         } else {
             System.out.println("Aluno já está matriculado nesta turma.");
         }
-}
+    }
 
+    public List<Turma> getTurmasTrancadas() {
+        return turmasTrancadas;
+    }
+
+    public void trancarTurma(Turma turma) {
+        if (turmasMatriculadas.contains(turma) && !turmasTrancadas.contains(turma)) {
+            turmasTrancadas.add(turma);
+            System.out.println("Turma trancada com sucesso.");
+        } else {
+            System.out.println("Turma não encontrada ou já trancada.");
+        }
+    }
 }

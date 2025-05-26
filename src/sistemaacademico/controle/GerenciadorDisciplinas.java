@@ -5,6 +5,7 @@ import sistemaacademico.modelo.Disciplina;
 import sistemaacademico.modelo.Turma;
 import sistemaacademico.modelo.Professor;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,14 +14,14 @@ public class GerenciadorDisciplinas {
     private List<Disciplina> disciplinas;
     private List<Turma> turmas;
 
-    // Referência para o gerenciador de professores, para pegar objetos Professor
+    private static final String ARQ_DISCIPLINAS = "disciplinas.dat";
+    private static final String ARQ_TURMAS = "turmas.dat";
+
     private GerenciadorProfessor gerenciadorProfessor;
 
-    // Construtor recebe o gerenciador de professores
     public GerenciadorDisciplinas(GerenciadorProfessor gerenciadorProfessor) {
         this.gerenciadorProfessor = gerenciadorProfessor;
-        this.disciplinas = new ArrayList<>();
-        this.turmas = new ArrayList<>();
+        carregarDados();
     }
 
     public void cadastrarDisciplina(Scanner scanner) {
@@ -34,6 +35,7 @@ public class GerenciadorDisciplinas {
 
         Disciplina d = new Disciplina(codigo, nome, carga);
         disciplinas.add(d);
+        salvarDisciplinas();
         System.out.println("Disciplina cadastrada com sucesso!");
     }
 
@@ -71,7 +73,6 @@ public class GerenciadorDisciplinas {
         }
         Disciplina disciplina = disciplinas.get(escolha - 1);
 
-        // Mostrar lista de professores para escolher
         System.out.println("Escolha o professor para a turma:");
         List<Professor> professores = gerenciadorProfessor.getProfessores();
         for (int i = 0; i < professores.size(); i++) {
@@ -102,6 +103,7 @@ public class GerenciadorDisciplinas {
 
         Turma turma = new Turma(disciplina, professor, semestre, formaAvaliacao, presencial, sala, horario, capacidade);
         turmas.add(turma);
+        salvarTurmas();
         System.out.println("Turma criada com sucesso!");
     }
 
@@ -112,6 +114,19 @@ public class GerenciadorDisciplinas {
             System.out.println("=== Turmas Criadas ===");
             for (Turma t : turmas) {
                 System.out.println(t);
+
+                List<Aluno> alunos = t.getAlunosMatriculados();
+                if (alunos.isEmpty()) {
+                    System.out.println("   -> Nenhum aluno matriculado.");
+                } else {
+                    System.out.println("   -> Alunos matriculados:");
+                    for (Aluno a : alunos) {
+                        boolean trancada = t.isTrancada(a);
+                        System.out.println("      - " + a.getNome() + " (" + a.getMatricula() + ")" +
+                                (trancada ? " [TRANCADO]" : ""));
+                    }
+                }
+                System.out.println();
             }
         }
     }
@@ -119,61 +134,104 @@ public class GerenciadorDisciplinas {
     public List<Turma> getTurmas() {
         return turmas;
     }
+
     public void matricularAlunoEmTurma(Scanner scanner, List<Aluno> alunos) {
-    if (turmas.isEmpty()) {
-        System.out.println("Nenhuma turma disponível.");
-        return;
-    }
-
-    System.out.println("Turmas disponíveis:");
-    for (int i = 0; i < turmas.size(); i++) {
-        System.out.println((i + 1) + ". " + turmas.get(i).getDisciplina().getNome() + " - " + turmas.get(i).getCodigo());
-    }
-
-    System.out.print("Escolha a turma (número): ");
-    int indiceTurma = scanner.nextInt() - 1;
-    scanner.nextLine();
-
-    if (indiceTurma < 0 || indiceTurma >= turmas.size()) {
-        System.out.println("Opção inválida.");
-        return;
-    }
-
-    Turma turmaSelecionada = turmas.get(indiceTurma);
-
-    System.out.print("Digite a matrícula do aluno: ");
-    String matricula = scanner.nextLine();
-
-    Aluno aluno = null;
-    for (Aluno a : alunos) {
-        if (a.getMatricula().equals(matricula)) {
-            aluno = a;
-            break;
-        }
-    }
-
-    if (aluno == null) {
-        System.out.println("Aluno não encontrado.");
-        return;
-    }
-
-    // ✅ Correção 2: Verificar choque de horário
-    for (Turma t : aluno.getTurmasMatriculadas()) {
-        if (t.getHorario().equals(turmaSelecionada.getHorario())) {
-            System.out.println("Erro: Choque de horário com a turma " + t.getDisciplina().getNome());
+        if (turmas.isEmpty()) {
+            System.out.println("Nenhuma turma disponível.");
             return;
         }
+
+        System.out.println("Turmas disponíveis:");
+        for (int i = 0; i < turmas.size(); i++) {
+            System.out.println((i + 1) + ". " + turmas.get(i).getDisciplina().getNome() + " - " + turmas.get(i).getCodigo());
+        }
+
+        System.out.print("Escolha a turma (número): ");
+        int indiceTurma = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        if (indiceTurma < 0 || indiceTurma >= turmas.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+
+        Turma turmaSelecionada = turmas.get(indiceTurma);
+
+        System.out.print("Digite a matrícula do aluno: ");
+        String matricula = scanner.nextLine();
+
+        Aluno aluno = null;
+        for (Aluno a : alunos) {
+            if (a.getMatricula().equals(matricula)) {
+                aluno = a;
+                break;
+            }
+        }
+
+        if (aluno == null) {
+            System.out.println("Aluno não encontrado.");
+            return;
+        }
+
+        for (Turma t : aluno.getTurmasMatriculadas()) {
+            if (t.getHorario().equals(turmaSelecionada.getHorario())) {
+                System.out.println("Erro: Choque de horário com a turma " + t.getDisciplina().getNome());
+                return;
+            }
+        }
+
+        boolean sucesso = turmaSelecionada.matricularAluno(aluno);
+
+        if (sucesso) {
+            aluno.adicionarTurma(turmaSelecionada);
+            salvarTurmas(); // Importante: salva o novo estado da turma com aluno
+            System.out.println("Aluno matriculado com sucesso!");
+        } else {
+            System.out.println("Não foi possível matricular o aluno (limite ou capacidade atingida).");
+        }
+    }
+    @SuppressWarnings("unchecked")
+    public void carregarDados() {
+        // Disciplinas
+        File arq1 = new File(ARQ_DISCIPLINAS);
+        if (arq1.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arq1))) {
+                disciplinas = (List<Disciplina>) ois.readObject();
+            } catch (Exception e) {
+                System.out.println("Erro ao carregar disciplinas: " + e.getMessage());
+                disciplinas = new ArrayList<>();
+            }
+        } else {
+            disciplinas = new ArrayList<>();
+        }
+
+        // Turmas
+        File arq2 = new File(ARQ_TURMAS);
+        if (arq2.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arq2))) {
+                turmas = (List<Turma>) ois.readObject();
+            } catch (Exception e) {
+                System.out.println("Erro ao carregar turmas: " + e.getMessage());
+                turmas = new ArrayList<>();
+            }
+        } else {
+            turmas = new ArrayList<>();
+        }
     }
 
-    // Tenta matricular na turma
-    boolean sucesso = turmaSelecionada.matricularAluno(aluno);
-
-    if (sucesso) {
-        // ✅ Correção 3: Atualizar lista de turmas do aluno
-        aluno.adicionarTurma(turmaSelecionada);
-        System.out.println("Aluno matriculado com sucesso!");
-    } else {
-        System.out.println("Não foi possível matricular o aluno (limite ou capacidade atingida).");
+    public void salvarDisciplinas() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQ_DISCIPLINAS))) {
+            oos.writeObject(disciplinas);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar disciplinas: " + e.getMessage());
+        }
     }
-}
+
+    public void salvarTurmas() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQ_TURMAS))) {
+            oos.writeObject(turmas);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar turmas: " + e.getMessage());
+        }
+    }
 }

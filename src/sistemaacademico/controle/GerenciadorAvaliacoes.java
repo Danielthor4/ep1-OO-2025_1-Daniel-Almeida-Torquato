@@ -4,13 +4,20 @@ import sistemaacademico.modelo.Aluno;
 import sistemaacademico.modelo.Turma;
 import sistemaacademico.modelo.Avaliacao;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class GerenciadorAvaliacoes {
 
-    private List<Avaliacao> avaliacoes = new ArrayList<>();
+    private List<Avaliacao> avaliacoes;
+
+    private static final String ARQUIVO = "avaliacoes.dat";
+
+    public GerenciadorAvaliacoes() {
+        carregarAvaliacoes();
+    }
 
     public void registrarAvaliacao(Scanner scanner, List<Turma> turmas) {
         if (turmas.isEmpty()) {
@@ -20,7 +27,7 @@ public class GerenciadorAvaliacoes {
 
         System.out.println("Selecione a turma para registrar avaliações:");
         for (int i = 0; i < turmas.size(); i++) {
-            System.out.println((i + 1) + ". " + turmas.get(i).toString());
+            System.out.println((i + 1) + ". " + turmas.get(i));
         }
         int opcaoTurma = scanner.nextInt();
         scanner.nextLine();
@@ -53,9 +60,8 @@ public class GerenciadorAvaliacoes {
 
         Aluno aluno = alunosMatriculados.get(opcaoAluno - 1);
 
-        // Checa se já existe avaliação para este aluno e disciplina
         boolean jaAvaliado = avaliacoes.stream()
-            .anyMatch(a -> a.getNomeAluno().equals(aluno.getNome()) 
+            .anyMatch(a -> a.getNomeAluno().equals(aluno.getNome())
                         && a.getCodigoDisciplina().equals(turma.getDisciplina().getCodigo()));
 
         if (jaAvaliado) {
@@ -69,8 +75,7 @@ public class GerenciadorAvaliacoes {
         double frequencia = scanner.nextDouble();
         scanner.nextLine();
 
-        // Regra simples para aprovação
-        boolean aprovado = (mediaFinal >= 6.0) && (frequencia >= 75.0);
+        boolean aprovado = (mediaFinal >= 5.0) && (frequencia >= 75.0);
 
         if (aprovado) {
             aluno.adicionarDisciplinaAprovada(turma.getDisciplina());
@@ -79,9 +84,9 @@ public class GerenciadorAvaliacoes {
             System.out.println("Aluno não foi aprovado.");
         }
 
-        // Salva avaliação
         Avaliacao avaliacao = new Avaliacao(aluno.getNome(), turma.getDisciplina().getCodigo(), mediaFinal, frequencia);
         avaliacoes.add(avaliacao);
+        salvarAvaliacoes();
     }
 
     public void listarAvaliacoes() {
@@ -93,6 +98,29 @@ public class GerenciadorAvaliacoes {
         System.out.println("\n=== LISTA DE AVALIAÇÕES ===");
         for (Avaliacao a : avaliacoes) {
             System.out.println(a);
+        }
+    }
+
+    public void salvarAvaliacoes() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQUIVO))) {
+            oos.writeObject(avaliacoes);
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar avaliações: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void carregarAvaliacoes() {
+        File arquivo = new File(ARQUIVO);
+        if (arquivo.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
+                avaliacoes = (List<Avaliacao>) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Erro ao carregar avaliações: " + e.getMessage());
+                avaliacoes = new ArrayList<>();
+            }
+        } else {
+            avaliacoes = new ArrayList<>();
         }
     }
 }
