@@ -4,13 +4,15 @@ import java.util.Scanner;
 import sistemaacademico.controle.GerenciadorAlunos;
 import sistemaacademico.controle.GerenciadorDisciplinas;
 import sistemaacademico.controle.GerenciadorAvaliacoes;
+import sistemaacademico.controle.GerenciadorProfessor;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         GerenciadorAlunos gerenciadorAlunos = new GerenciadorAlunos();
-        GerenciadorDisciplinas gerenciadorDisciplina = new GerenciadorDisciplinas();
+        GerenciadorProfessor gerenciadorProfessor = new GerenciadorProfessor();
+        GerenciadorDisciplinas gerenciadorDisciplina = new GerenciadorDisciplinas(gerenciadorProfessor);
         GerenciadorAvaliacoes gerenciadorAvaliacoes = new GerenciadorAvaliacoes();
 
         int opcao;
@@ -19,7 +21,8 @@ public class Main {
             System.out.println("\n==== SISTEMA ACADÊMICO FCTE ====");
             System.out.println("1. Gerenciar Alunos");
             System.out.println("2. Gerenciar Disciplinas/Turmas");
-            System.out.println("3. Avaliações e Frequência");
+            System.out.println("3. Gerenciar Professores");
+            System.out.println("4. Avaliações e Frequência");
             System.out.println("0. Sair");
             System.out.print("Escolha: ");
             opcao = scanner.nextInt();
@@ -33,6 +36,9 @@ public class Main {
                     menuDisciplinas(scanner, gerenciadorDisciplina);
                     break;
                 case 3:
+                    menuProfessores(scanner, gerenciadorProfessor);
+                    break;
+                case 4:
                     menuAvaliacoes(scanner, gerenciadorAvaliacoes, gerenciadorDisciplina);
                     break;
                 case 0:
@@ -108,30 +114,57 @@ public class Main {
         } while (opcaoDisc != 0);
     }
 
-    private static void menuAvaliacoes(Scanner scanner, GerenciadorAvaliacoes gerenciadorAvaliacoes, GerenciadorDisciplinas gerenciadorDisciplinas) {
-    int opcaoAvaliacao;
-    do {
-        System.out.println("\n=== MENU AVALIAÇÕES ===");
-        System.out.println("1. Registrar avaliação");
-        System.out.println("2. Listar avaliações");
-        System.out.println("0. Voltar");
-        System.out.print("Escolha: ");
-        opcaoAvaliacao = scanner.nextInt();
-        scanner.nextLine();
+    private static void menuProfessores(Scanner scanner, GerenciadorProfessor gerenciadorProfessor) {
+        int opcaoProf;
+        do {
+            System.out.println("\n=== MENU PROFESSORES ===");
+            System.out.println("1. Cadastrar professor");
+            System.out.println("2. Listar professores");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha: ");
+            opcaoProf = scanner.nextInt();
+            scanner.nextLine();
 
-        switch (opcaoAvaliacao) {
-            case 1:
-                gerenciadorAvaliacoes.registrarAvaliacao(scanner, gerenciadorDisciplinas.getTurmas());
-                break;
-            case 2:
-                gerenciadorAvaliacoes.listarAvaliacoes();
-                break;
-            case 0:
-                System.out.println("Voltando ao menu principal...");
-                break;
-            default:
-                System.out.println("Opção inválida.");
-        }
-    } while (opcaoAvaliacao != 0);
+            switch (opcaoProf) {
+                case 1:
+                    gerenciadorProfessor.cadastrarProfessor(scanner);
+                    break;
+                case 2:
+                    gerenciadorProfessor.listarProfessores();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (opcaoProf != 0);
+    }
+
+    private static void menuAvaliacoes(Scanner scanner, GerenciadorAvaliacoes gerenciadorAvaliacoes, GerenciadorDisciplinas gerenciadorDisciplinas) {
+        int opcaoAvaliacao;
+        do {
+            System.out.println("\n=== MENU AVALIAÇÕES ===");
+            System.out.println("1. Registrar avaliação");
+            System.out.println("2. Listar avaliações");
+            System.out.println("0. Voltar");
+            System.out.print("Escolha: ");
+            opcaoAvaliacao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcaoAvaliacao) {
+                case 1:
+                    gerenciadorAvaliacoes.registrarAvaliacao(scanner, gerenciadorDisciplinas.getTurmas());
+                    break;
+                case 2:
+                    gerenciadorAvaliacoes.listarAvaliacoes();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        } while (opcaoAvaliacao != 0);
     }
 }

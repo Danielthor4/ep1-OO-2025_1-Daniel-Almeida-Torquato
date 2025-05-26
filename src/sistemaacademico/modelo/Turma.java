@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Turma {
     private Disciplina disciplina;
-    private String professor;
+    private Professor professor;  // Alterado para objeto Professor
     private String semestre;
     private String formaAvaliacao; // "simples" ou "ponderada"
     private boolean presencial;
@@ -17,10 +17,10 @@ public class Turma {
     private List<Double[]> notas; // Array de notas por aluno (P1, P2, P3, L, S)
     private List<Integer> presencas; // porcentagem de presença por aluno (0 a 100)
 
-    public Turma(Disciplina disciplina, String professor, String semestre, String formaAvaliacao,
+    public Turma(Disciplina disciplina, Professor professor, String semestre, String formaAvaliacao,
                  boolean presencial, String sala, String horario, int capacidadeMaxima) {
         this.disciplina = disciplina;
-        this.professor = professor;
+        this.professor = professor; // recebe o objeto Professor
         this.semestre = semestre;
         this.formaAvaliacao = formaAvaliacao;
         this.presencial = presencial;
@@ -56,7 +56,7 @@ public class Turma {
         return media >= 5.0;
     }
 
-    // Getters, setters, e toString
+    // Getters e setters (inclusive do professor)
 
     public List<Aluno> getAlunosMatriculados() {
         return alunosMatriculados;
@@ -66,8 +66,12 @@ public class Turma {
         return disciplina;
     }
 
-    public String getProfessor() {
+    public Professor getProfessor() {
         return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
     }
 
     public String getSemestre() {
@@ -96,7 +100,8 @@ public class Turma {
 
     @Override
     public String toString() {
-        return "Turma de " + disciplina.getNome() + " com " + professor + " no semestre " + semestre +
-               " [" + (presencial ? "Presencial" : "Remota") + "]";
+        return "Turma de " + disciplina.getNome() + " com " + 
+               (professor != null ? professor.getNome() : "Sem professor") + 
+               " no semestre " + semestre + " [" + (presencial ? "Presencial" : "Remota") + "]";
     }
 }

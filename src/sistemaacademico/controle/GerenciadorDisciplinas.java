@@ -2,14 +2,25 @@ package sistemaacademico.controle;
 
 import sistemaacademico.modelo.Disciplina;
 import sistemaacademico.modelo.Turma;
+import sistemaacademico.modelo.Professor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class GerenciadorDisciplinas {
-    private List<Disciplina> disciplinas = new ArrayList<>();
-    private List<Turma> turmas = new ArrayList<>();
+    private List<Disciplina> disciplinas;
+    private List<Turma> turmas;
+
+    // Referência para o gerenciador de professores, para pegar objetos Professor
+    private GerenciadorProfessor gerenciadorProfessor;
+
+    // Construtor recebe o gerenciador de professores
+    public GerenciadorDisciplinas(GerenciadorProfessor gerenciadorProfessor) {
+        this.gerenciadorProfessor = gerenciadorProfessor;
+        this.disciplinas = new ArrayList<>();
+        this.turmas = new ArrayList<>();
+    }
 
     public void cadastrarDisciplina(Scanner scanner) {
         System.out.print("Código da disciplina: ");
@@ -42,6 +53,11 @@ public class GerenciadorDisciplinas {
             return;
         }
 
+        if (gerenciadorProfessor.getProfessores().isEmpty()) {
+            System.out.println("Cadastre um professor antes de criar turmas.");
+            return;
+        }
+
         System.out.println("Escolha a disciplina para a turma:");
         for (int i = 0; i < disciplinas.size(); i++) {
             System.out.println((i + 1) + ". " + disciplinas.get(i).getNome());
@@ -52,11 +68,22 @@ public class GerenciadorDisciplinas {
             System.out.println("Opção inválida.");
             return;
         }
-
         Disciplina disciplina = disciplinas.get(escolha - 1);
 
-        System.out.print("Professor: ");
-        String professor = scanner.nextLine();
+        // Mostrar lista de professores para escolher
+        System.out.println("Escolha o professor para a turma:");
+        List<Professor> professores = gerenciadorProfessor.getProfessores();
+        for (int i = 0; i < professores.size(); i++) {
+            System.out.println((i + 1) + ". " + professores.get(i).getNome() + " (" + professores.get(i).getDepartamento() + ")");
+        }
+        int escolhaProf = scanner.nextInt();
+        scanner.nextLine();
+        if (escolhaProf < 1 || escolhaProf > professores.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+        Professor professor = professores.get(escolhaProf - 1);
+
         System.out.print("Semestre (ex: 2024.2): ");
         String semestre = scanner.nextLine();
         System.out.print("Forma de avaliação (simples ou ponderada): ");
@@ -88,7 +115,6 @@ public class GerenciadorDisciplinas {
         }
     }
 
-    // Método para expor a lista de turmas para outras classes (ex: GerenciadorAvaliacoes)
     public List<Turma> getTurmas() {
         return turmas;
     }
