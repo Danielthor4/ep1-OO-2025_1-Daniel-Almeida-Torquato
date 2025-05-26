@@ -34,4 +34,9 @@ public abstract class Aluno {
 
     public abstract boolean podeReceberNota();
     public abstract int getLimiteDisciplinas();
+
+    public void setNome(String nome) {
+    this.nome = nome;
+}
+
 }
