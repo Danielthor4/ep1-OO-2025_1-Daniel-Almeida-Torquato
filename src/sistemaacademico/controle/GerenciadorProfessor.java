@@ -66,6 +66,34 @@ public class GerenciadorProfessor {
         return null;
     }
 
+    // Editar dados de um professor
+    public void editarProfessor(Scanner scanner) {
+        System.out.print("Digite a matrícula do professor a ser editado: ");
+        String matricula = scanner.nextLine().trim();
+        Professor professor = buscarProfessorPorMatricula(matricula);
+
+        if (professor == null) {
+            System.out.println("Professor não encontrado.");
+            return;
+        }
+
+        System.out.println("Editando dados do professor: " + professor.getNome());
+
+        System.out.print("Novo nome (pressione ENTER para manter atual): ");
+        String novoNome = scanner.nextLine().trim();
+        if (!novoNome.isEmpty()) {
+            professor.setNome(novoNome);
+        }
+
+        System.out.print("Nova área (pressione ENTER para manter atual): ");
+        String novaArea = scanner.nextLine().trim();
+        if (!novaArea.isEmpty()) {
+            professor.setDepartamento(novaArea);
+        }
+
+        System.out.println("Dados atualizados com sucesso!");
+    }
+
     // Getter para lista de professores (se precisar usar em outros lugares)
     public List<Professor> getProfessores() {
         return professores;

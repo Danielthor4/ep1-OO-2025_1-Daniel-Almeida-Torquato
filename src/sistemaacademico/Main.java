@@ -115,31 +115,36 @@ public class Main {
     }
 
     private static void menuProfessores(Scanner scanner, GerenciadorProfessor gerenciadorProfessor) {
-        int opcaoProf;
-        do {
-            System.out.println("\n=== MENU PROFESSORES ===");
-            System.out.println("1. Cadastrar professor");
-            System.out.println("2. Listar professores");
-            System.out.println("0. Voltar");
-            System.out.print("Escolha: ");
-            opcaoProf = scanner.nextInt();
-            scanner.nextLine();
+    int opcaoProf;
+    do {
+        System.out.println("\n=== MENU PROFESSORES ===");
+        System.out.println("1. Cadastrar professor");
+        System.out.println("2. Listar professores");
+        System.out.println("3. Editar professor");
+        System.out.println("0. Voltar");
+        System.out.print("Escolha: ");
+        opcaoProf = scanner.nextInt();
+        scanner.nextLine();
 
-            switch (opcaoProf) {
-                case 1:
-                    gerenciadorProfessor.cadastrarProfessor(scanner);
-                    break;
-                case 2:
-                    gerenciadorProfessor.listarProfessores();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu principal...");
-                    break;
-                default:
-                    System.out.println("Opção inválida.");
-            }
-        } while (opcaoProf != 0);
-    }
+        switch (opcaoProf) {
+            case 1:
+                gerenciadorProfessor.cadastrarProfessor(scanner);
+                break;
+            case 2:
+                gerenciadorProfessor.listarProfessores();
+                break;
+            case 3:
+                gerenciadorProfessor.editarProfessor(scanner);
+                break;
+            case 0:
+                System.out.println("Voltando ao menu principal...");
+                break;
+            default:
+                System.out.println("Opção inválida.");
+        }
+    } while (opcaoProf != 0);
+}
+
 
     private static void menuAvaliacoes(Scanner scanner, GerenciadorAvaliacoes gerenciadorAvaliacoes, GerenciadorDisciplinas gerenciadorDisciplinas) {
         int opcaoAvaliacao;
