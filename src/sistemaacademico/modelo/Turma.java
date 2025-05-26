@@ -36,7 +36,9 @@ public class Turma {
 
     public boolean matricularAluno(Aluno aluno) {
         if (alunosMatriculados.size() >= capacidadeMaxima) return false;
-        if (aluno instanceof AlunoEspecial && alunosMatriculados.size() >= aluno.getLimiteDisciplinas()) return false;
+        if (aluno instanceof AlunoEspecial && aluno.getTurmasMatriculadas().size() >= aluno.getLimiteDisciplinas()) {
+        return false;
+}
 
         alunosMatriculados.add(aluno);
         notas.add(new Double[]{0.0, 0.0, 0.0, 0.0, 0.0});

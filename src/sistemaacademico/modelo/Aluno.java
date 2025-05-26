@@ -7,7 +7,8 @@ public abstract class Aluno {
     protected String nome;
     protected String matricula;
     protected String curso;
-    protected List<Disciplina> disciplinasAprovadas = new ArrayList<>(); // Adicione este atributo
+    protected List<Disciplina> disciplinasAprovadas = new ArrayList<>();
+    protected List<Turma> turmasMatriculadas = new ArrayList<>();
 
     public Aluno(String nome, String matricula, String curso) {
         this.nome = nome;
@@ -37,6 +38,17 @@ public abstract class Aluno {
 
     public void setNome(String nome) {
     this.nome = nome;
+}
+    public List<Turma> getTurmasMatriculadas() {
+    return turmasMatriculadas;
+}
+
+    public void adicionarTurma(Turma turma) {
+        if (!turmasMatriculadas.contains(turma)) {
+            turmasMatriculadas.add(turma);
+        } else {
+            System.out.println("Aluno já está matriculado nesta turma.");
+        }
 }
 
 }

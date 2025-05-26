@@ -157,6 +157,23 @@ public class GerenciadorDisciplinas {
         return;
     }
 
-    turmaSelecionada.matricularAluno(aluno);
+    // ✅ Correção 2: Verificar choque de horário
+    for (Turma t : aluno.getTurmasMatriculadas()) {
+        if (t.getHorario().equals(turmaSelecionada.getHorario())) {
+            System.out.println("Erro: Choque de horário com a turma " + t.getDisciplina().getNome());
+            return;
+        }
+    }
+
+    // Tenta matricular na turma
+    boolean sucesso = turmaSelecionada.matricularAluno(aluno);
+
+    if (sucesso) {
+        // ✅ Correção 3: Atualizar lista de turmas do aluno
+        aluno.adicionarTurma(turmaSelecionada);
+        System.out.println("Aluno matriculado com sucesso!");
+    } else {
+        System.out.println("Não foi possível matricular o aluno (limite ou capacidade atingida).");
+    }
 }
 }
