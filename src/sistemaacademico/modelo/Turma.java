@@ -12,6 +12,7 @@ public class Turma {
     private String sala;
     private String horario;
     private int capacidadeMaxima;
+    private String codigo; 
 
     private List<Aluno> alunosMatriculados;
     private List<Double[]> notas; // Array de notas por aluno (P1, P2, P3, L, S)
@@ -30,6 +31,7 @@ public class Turma {
         this.alunosMatriculados = new ArrayList<>();
         this.notas = new ArrayList<>();
         this.presencas = new ArrayList<>();
+        this.codigo = disciplina.getCodigo() + "-" + semestre;
     }
 
     public boolean matricularAluno(Aluno aluno) {
@@ -103,5 +105,8 @@ public class Turma {
         return "Turma de " + disciplina.getNome() + " com " + 
                (professor != null ? professor.getNome() : "Sem professor") + 
                " no semestre " + semestre + " [" + (presencial ? "Presencial" : "Remota") + "]";
+    }
+    public String getCodigo() {
+        return codigo;
     }
 }

@@ -1,5 +1,6 @@
 package sistemaacademico.controle;
 
+import sistemaacademico.modelo.Aluno;
 import sistemaacademico.modelo.Disciplina;
 import sistemaacademico.modelo.Turma;
 import sistemaacademico.modelo.Professor;
@@ -118,4 +119,44 @@ public class GerenciadorDisciplinas {
     public List<Turma> getTurmas() {
         return turmas;
     }
+    public void matricularAlunoEmTurma(Scanner scanner, List<Aluno> alunos) {
+    if (turmas.isEmpty()) {
+        System.out.println("Nenhuma turma disponível.");
+        return;
+    }
+
+    System.out.println("Turmas disponíveis:");
+    for (int i = 0; i < turmas.size(); i++) {
+        System.out.println((i + 1) + ". " + turmas.get(i).getDisciplina().getNome() + " - " + turmas.get(i).getCodigo());
+    }
+
+    System.out.print("Escolha a turma (número): ");
+    int indiceTurma = scanner.nextInt() - 1;
+    scanner.nextLine();
+
+    if (indiceTurma < 0 || indiceTurma >= turmas.size()) {
+        System.out.println("Opção inválida.");
+        return;
+    }
+
+    Turma turmaSelecionada = turmas.get(indiceTurma);
+
+    System.out.print("Digite a matrícula do aluno: ");
+    String matricula = scanner.nextLine();
+
+    Aluno aluno = null;
+    for (Aluno a : alunos) {
+        if (a.getMatricula().equals(matricula)) {
+            aluno = a;
+            break;
+        }
+    }
+
+    if (aluno == null) {
+        System.out.println("Aluno não encontrado.");
+        return;
+    }
+
+    turmaSelecionada.matricularAluno(aluno);
+}
 }

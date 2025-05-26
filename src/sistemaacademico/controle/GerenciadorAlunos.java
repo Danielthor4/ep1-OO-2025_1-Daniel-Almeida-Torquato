@@ -86,4 +86,17 @@ public class GerenciadorAlunos {
         }
         return null;
     }
+    public void removerAluno(Scanner scanner) {
+    System.out.print("Digite a matrícula do aluno a ser removido: ");
+    String matricula = scanner.nextLine();
+
+    Aluno aluno = buscarAlunoPorMatricula(matricula);
+    if (aluno == null) {
+        System.out.println("Aluno não encontrado.");
+        return;
+    }
+
+    alunos.remove(aluno);
+    System.out.println("Aluno removido com sucesso!");
+}
 }

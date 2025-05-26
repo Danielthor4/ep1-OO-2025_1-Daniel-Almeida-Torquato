@@ -20,7 +20,7 @@ public class Main {
         do {
             System.out.println("\n==== SISTEMA ACADÊMICO FCTE ====");
             System.out.println("1. Gerenciar Alunos");
-            System.out.println("2. Gerenciar Disciplinas/Turmas");
+            System.out.println("2. Gerenciar Disciplinas e Turmas");
             System.out.println("3. Gerenciar Professores");
             System.out.println("4. Avaliações e Frequência");
             System.out.println("0. Sair");
@@ -33,7 +33,7 @@ public class Main {
                     menuAlunos(scanner, gerenciadorAlunos);
                     break;
                 case 2:
-                    menuDisciplinas(scanner, gerenciadorDisciplina);
+                    menuDisciplinas(scanner, gerenciadorDisciplina, gerenciadorAlunos);
                     break;
                 case 3:
                     menuProfessores(scanner, gerenciadorProfessor);
@@ -58,6 +58,8 @@ public class Main {
             System.out.println("\n=== MENU ALUNOS ===");
             System.out.println("1. Cadastrar aluno");
             System.out.println("2. Listar alunos");
+            System.out.println("3. Editar aluno");
+            System.out.println("4. Remover aluno");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
             opcaoAluno = scanner.nextInt();
@@ -70,6 +72,12 @@ public class Main {
                 case 2:
                     gerenciadorAlunos.listarAlunos();
                     break;
+                case 3:
+                    gerenciadorAlunos.editarAluno(scanner);
+                    break;
+                case 4:
+                    gerenciadorAlunos.removerAluno(scanner);
+                    break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
                     break;
@@ -79,7 +87,7 @@ public class Main {
         } while (opcaoAluno != 0);
     }
 
-    private static void menuDisciplinas(Scanner scanner, GerenciadorDisciplinas gerenciadorDisciplina) {
+    private static void menuDisciplinas(Scanner scanner, GerenciadorDisciplinas gerenciadorDisciplina, GerenciadorAlunos gerenciadorAlunos) {
         int opcaoDisc;
         do {
             System.out.println("\n=== MENU DISCIPLINAS/TURMAS ===");
@@ -87,6 +95,7 @@ public class Main {
             System.out.println("2. Criar turma");
             System.out.println("3. Listar disciplinas");
             System.out.println("4. Listar turmas");
+            System.out.println("5. Matricular aluno em turma");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
             opcaoDisc = scanner.nextInt();
@@ -104,6 +113,9 @@ public class Main {
                     break;
                 case 4:
                     gerenciadorDisciplina.listarTurmas();
+                    break;
+                case 5:
+                    gerenciadorDisciplina.matricularAlunoEmTurma(scanner, gerenciadorAlunos.getAlunos());  
                     break;
                 case 0:
                     System.out.println("Voltando ao menu principal...");
