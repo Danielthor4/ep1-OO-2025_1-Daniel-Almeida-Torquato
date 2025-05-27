@@ -34,20 +34,20 @@ O enunciado do trabalho pode ser encontrado aqui:
 
 ## Vídeo de Demonstração
 
-- [Inserir o link para o vídeo no YouTube/Drive aqui]
+- [https://youtu.be/7qjTcMU9o4c]
 
 ---
 
 ## Prints da Execução
 
 1. Menu Principal:  
-   ![Inserir Print 1](caminho/do/print1.png)
+   ![Inserir Print 1](ep1-OO-2025_1-Daniel-Almeida-Torquato\Print 1.jpg)
 
 2. Cadastro de Aluno:  
-   ![Inserir Print 2](caminho/do/print2.png)
+   ![Inserir Print 2](ep1-OO-2025_1-Daniel-Almeida-Torquato\Print 2.jpg)
 
 3. Relatório de Frequência/Notas:  
-   ![Inserir Print 3](caminho/do/print3.png)
+   ![Inserir Print 3](ep1-OO-2025_1-Daniel-Almeida-Torquato\Print 3.jpg)
 
 ---
 
@@ -67,7 +67,7 @@ O enunciado do trabalho pode ser encontrado aqui:
 
 ## Observações (Extras ou Dificuldades)
 
-- [Eu coloquei fun]
+- [Eu coloquei todas funções exigidas, mas infelizmente nem todas estão funcionando]
 
 ---
 
