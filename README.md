@@ -25,7 +25,7 @@ O enunciado do trabalho pode ser encontrado aqui:
    [Descrever aqui como executar o projeto. Exemplo: `java Main` ou o script usado]
 
 3. **Estrutura de Pastas:**  
-   [Descrever aqui as principais pastas do projeto]
+   [O Main ficou dentro da raiz junto com as prints e os arquivos.dat, criei uma pasta modelo para as classes normais, uma pasta controle onde ficam as classes gerenciadoras, e a pasta util onde fica o ArquivoUtils]
 
 3. **Versão do JAVA utilizada:**  
    [Descrever aqui como versão do JAVA utilizada no projeto. Sugestão: `java 23.0.1`]
