@@ -71,4 +71,7 @@ public abstract class Aluno implements Serializable {
             System.out.println("Turma não encontrada ou já trancada.");
         }
     }
+    public void removerDisciplinaAprovada(Disciplina disciplina) {
+        disciplinasAprovadas.remove(disciplina);
+}
 }

@@ -37,4 +37,12 @@ public class Avaliacao implements Serializable {
     public String toString() {
         return "Aluno: " + nomeAluno + ", Disciplina: " + codigoDisciplina + ", Média: " + mediaFinal + ", Frequência: " + frequencia + "%";
     }
+
+    public void setMediaFinal(double mediaFinal) {
+    this.mediaFinal = mediaFinal;
+}
+
+    public void setFrequencia(double frequencia) {
+        this.frequencia = frequencia;
+}
 }

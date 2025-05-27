@@ -128,4 +128,44 @@ public class Turma implements Serializable {
                (professor != null ? professor.getNome() : "Sem professor") +
                " no semestre " + semestre + " [" + (presencial ? "Presencial" : "Remota") + "]";
     }
+
+    public void setSemestre(String semestre) {
+        this.semestre = semestre;
+        this.codigo = disciplina.getCodigo() + "-" + semestre; // atualiza o código também
+}
+
+    public void setFormaAvaliacao(String formaAvaliacao) {
+        this.formaAvaliacao = formaAvaliacao;
+}
+
+    public void setPresencial(boolean presencial) {
+        this.presencial = presencial;
+}
+
+    public void setSala(String sala) {
+        this.sala = sala;
+}
+
+    public void setHorario(String horario) {
+        this.horario = horario;
+}
+
+    public void setCapacidadeMaxima(int capacidadeMaxima) {
+        this.capacidadeMaxima = capacidadeMaxima;
+}
+    public List<Double[]> getNotas() {
+    return notas;
+}
+
+    public List<Integer> getPresencas() {
+    return presencas;
+}
+    public boolean editarPresencaAluno(Aluno aluno, int novaPresenca) {
+    int index = alunosMatriculados.indexOf(aluno);
+    if (index == -1) {
+        return false;
+    }
+    presencas.set(index, novaPresenca);
+    return true;
+}
 }

@@ -86,7 +86,7 @@ public class GerenciadorDisciplinas {
         }
         Professor professor = professores.get(escolhaProf - 1);
 
-        System.out.print("Semestre (ex: 2024.2): ");
+        System.out.print("Semestre (ex: 2025.1): ");
         String semestre = scanner.nextLine();
         System.out.print("Forma de avaliação (simples ou ponderada): ");
         String formaAvaliacao = scanner.nextLine();
@@ -234,4 +234,177 @@ public class GerenciadorDisciplinas {
             System.out.println("Erro ao salvar turmas: " + e.getMessage());
         }
     }
+    public void editarDisciplina(Scanner scanner) {
+    if (disciplinas.isEmpty()) {
+        System.out.println("Nenhuma disciplina cadastrada.");
+        return;
+    }
+
+    System.out.print("Digite o código da disciplina a ser editada: ");
+    String codigo = scanner.nextLine();
+
+    Disciplina disciplina = null;
+    for (Disciplina d : disciplinas) {
+        if (d.getCodigo().equalsIgnoreCase(codigo)) {
+            disciplina = d;
+            break;
+        }
+    }
+
+    if (disciplina == null) {
+        System.out.println("Disciplina não encontrada.");
+        return;
+    }
+
+    System.out.println("Disciplina encontrada: " + disciplina.getNome() + " (Carga: " + disciplina.getCargaHoraria() + "h)");
+
+    System.out.print("Novo nome (pressione Enter para manter): ");
+    String novoNome = scanner.nextLine();
+    if (!novoNome.isBlank()) {
+        disciplina.setNome(novoNome);
+    }
+
+    System.out.print("Nova carga horária (ou Enter para manter): ");
+    String novaCarga = scanner.nextLine();
+    if (!novaCarga.isBlank()) {
+        try {
+            int novaCargaInt = Integer.parseInt(novaCarga);
+            disciplina.setCargaHoraria(novaCargaInt);
+        } catch (NumberFormatException e) {
+            System.out.println("Carga horária inválida. Mantida a original.");
+        }
+    }
+
+    salvarDisciplinas();
+    System.out.println("Disciplina atualizada com sucesso.");
+}
+    public void editarTurma(Scanner scanner) {
+    if (turmas.isEmpty()) {
+        System.out.println("Nenhuma turma cadastrada.");
+        return;
+    }
+
+    System.out.println("=== Turmas Disponíveis ===");
+    for (int i = 0; i < turmas.size(); i++) {
+        Turma t = turmas.get(i);
+        System.out.println((i + 1) + ". " + t.getDisciplina().getNome() + " - " + t.getCodigo());
+    }
+
+    System.out.print("Escolha a turma que deseja editar (número): ");
+    int escolha = scanner.nextInt();
+    scanner.nextLine();
+
+    if (escolha < 1 || escolha > turmas.size()) {
+        System.out.println("Opção inválida.");
+        return;
+    }
+
+    Turma turma = turmas.get(escolha - 1);
+
+    System.out.println("Editando turma da disciplina: " + turma.getDisciplina().getNome());
+
+    System.out.print("Novo semestre (atual: " + turma.getSemestre() + "): ");
+    String semestre = scanner.nextLine();
+    if (!semestre.isBlank()) {
+        turma.setSemestre(semestre);
+    }
+
+    System.out.print("Nova forma de avaliação (atual: " + turma.getFormaAvaliacao() + "): ");
+    String forma = scanner.nextLine();
+    if (!forma.isBlank()) {
+        turma.setFormaAvaliacao(forma);
+    }
+
+    System.out.print("É presencial? (atual: " + turma.isPresencial() + ") [true/false ou Enter para manter]: ");
+    String presencialStr = scanner.nextLine();
+    if (!presencialStr.isBlank()) {
+        turma.setPresencial(Boolean.parseBoolean(presencialStr));
+    }
+
+    System.out.print("Nova sala (atual: " + turma.getSala() + "): ");
+    String sala = scanner.nextLine();
+    if (!sala.isBlank()) {
+        turma.setSala(sala);
+    }
+
+    System.out.print("Novo horário (atual: " + turma.getHorario() + "): ");
+    String horario = scanner.nextLine();
+    if (!horario.isBlank()) {
+        turma.setHorario(horario);
+    }
+
+    System.out.print("Nova capacidade (atual: " + turma.getCapacidadeMaxima() + "): ");
+    String capacidadeStr = scanner.nextLine();
+    if (!capacidadeStr.isBlank()) {
+        try {
+            int novaCapacidade = Integer.parseInt(capacidadeStr);
+            turma.setCapacidadeMaxima(novaCapacidade);
+        } catch (NumberFormatException e) {
+            System.out.println("Capacidade inválida. Mantida a original.");
+        }
+    }
+
+    salvarTurmas();
+    System.out.println("Turma atualizada com sucesso.");
+}
+    public void removerTurma(Scanner scanner) {
+    if (turmas.isEmpty()) {
+        System.out.println("Nenhuma turma cadastrada.");
+        return;
+    }
+
+    System.out.println("=== Turmas Cadastradas ===");
+    for (int i = 0; i < turmas.size(); i++) {
+        Turma t = turmas.get(i);
+        System.out.println((i + 1) + ". " + t.getDisciplina().getNome() + " - " + t.getCodigo());
+    }
+
+    System.out.print("Digite o número da turma que deseja remover: ");
+    int escolha = scanner.nextInt();
+    scanner.nextLine();
+
+    if (escolha < 1 || escolha > turmas.size()) {
+        System.out.println("Opção inválida.");
+        return;
+    }
+
+    Turma turmaRemovida = turmas.remove(escolha - 1);
+    salvarTurmas();
+    System.out.println("Turma '" + turmaRemovida.getCodigo() + "' removida com sucesso.");
+}
+    public void removerDisciplina(Scanner scanner) {
+    if (disciplinas.isEmpty()) {
+        System.out.println("Nenhuma disciplina cadastrada.");
+        return;
+    }
+
+    System.out.println("=== Disciplinas Cadastradas ===");
+    for (int i = 0; i < disciplinas.size(); i++) {
+        Disciplina d = disciplinas.get(i);
+        System.out.println((i + 1) + ". " + d.getNome() + " (" + d.getCodigo() + ")");
+    }
+
+    System.out.print("Digite o número da disciplina que deseja remover: ");
+    int escolha = scanner.nextInt();
+    scanner.nextLine();
+
+    if (escolha < 1 || escolha > disciplinas.size()) {
+        System.out.println("Opção inválida.");
+        return;
+    }
+
+    Disciplina disciplinaSelecionada = disciplinas.get(escolha - 1);
+
+    // Verifica se há turmas associadas
+    for (Turma t : turmas) {
+        if (t.getDisciplina().equals(disciplinaSelecionada)) {
+            System.out.println("Não é possível remover: há turmas associadas a esta disciplina.");
+            return;
+        }
+    }
+
+    disciplinas.remove(disciplinaSelecionada);
+    salvarDisciplinas();
+    System.out.println("Disciplina '" + disciplinaSelecionada.getNome() + "' removida com sucesso.");
+}
 }

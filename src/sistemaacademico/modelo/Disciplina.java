@@ -43,4 +43,12 @@ public class Disciplina implements Serializable {
     public String toString() {
         return nome + " (" + codigo + "), Carga Horária: " + cargaHoraria;
     }
+
+    public void setNome(String nome) {
+    this.nome = nome;
+}
+
+    public void setCargaHoraria(int cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
+}
 }
