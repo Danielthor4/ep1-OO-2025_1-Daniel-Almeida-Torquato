@@ -129,7 +129,7 @@ public class Main {
             System.out.println("7. Remover disciplina");
             System.out.println("8. Remover turma");
             System.out.println("9. Matricular aluno em turma");
-            System.out.println("10. Trancar disciplina");
+            System.out.println("10. Trancar turma");
             System.out.println("11. Trancar semestre");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
@@ -220,14 +220,13 @@ public class Main {
             System.out.println("\n=== MENU AVALIAÇÕES/FREQUÊNCIA ===");
             System.out.println("1. Registrar avaliação");
             System.out.println("2. Listar avaliações");
-            System.out.println("3. Editar avaliação");
-            System.out.println("4. Editar presença");
-            System.out.println("5. Lançar Notas e Presença");
-            System.out.println("6. Calcular e listar média final");
-            System.out.println("7. Exibir relatório de notas e presença por turma");
-            System.out.println("8. Exibir relatório de notas e presença por disciplina");
-            System.out.println("9. Exibir relatório de notas e presença por professor");
-            System.out.println("10. Exibir boletim individual de aluno com ou sem dados das turmas");
+            System.out.println("3. Editar avaliação e presença");
+            System.out.println("4. Lançar Notas e Presença");
+            System.out.println("5. Calcular e listar média final");
+            System.out.println("6. Exibir relatório de notas e presença por turma");
+            System.out.println("7. Exibir relatório de notas e presença por disciplina");
+            System.out.println("8. Exibir relatório de notas e presença por professor");
+            System.out.println("9. Exibir boletim individual de aluno com ou sem dados das turmas");
             System.out.println("0. Voltar");
             System.out.print("Escolha: ");
             opcaoAvaliacao = scanner.nextInt();
@@ -244,24 +243,21 @@ public class Main {
                     gerenciadorAvaliacoes.editarAvaliacao(scanner, gerenciadorDisciplinas.getTurmas());
                     break;
                 case 4:
-                    gerenciadorAvaliacoes.editarPresenca(scanner, gerenciadorDisciplinas.getTurmas());
-                    break;
-                case 5:
                     gerenciadorAvaliacoes.lancarNotasEPresenca(scanner, gerenciadorDisciplinas.getTurmas());
                     break;
-                case 6:
+                case 5:
                     gerenciadorAvaliacoes.mostrarSituacaoAluno(gerenciadorDisciplinas.getTurmas(), scanner);
                     break;
-                case 7:
+                case 6:
                     gerenciadorAvaliacoes.relatorioPorTurma(gerenciadorDisciplinas.getTurmas(), scanner);
                     break;
-                case 8:
+                case 7:
                     gerenciadorAvaliacoes.relatorioPorDisciplina(gerenciadorDisciplinas.getTurmas(), scanner);
                     break;
-                case 9:
+                case 8:
                     gerenciadorAvaliacoes.relatorioPorProfessor(gerenciadorDisciplinas.getTurmas(), scanner);
                     break;
-                case 10:
+                case 9:
                     gerenciadorAvaliacoes.exibirBoletimIndividual(scanner, gerenciadorDisciplinas.getTurmas(), gerenciadorAvaliacoes.getAvaliacoes());
                     break;
                 case 0:

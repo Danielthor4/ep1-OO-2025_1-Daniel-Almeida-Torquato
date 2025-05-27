@@ -42,17 +42,16 @@ public class Turma implements Serializable {
     }
 
     public boolean matricularAluno(Aluno aluno) {
+        if (alunosMatriculados.contains(aluno)) return false;
+
         if (alunosMatriculados.size() >= capacidadeMaxima) return false;
-        if (aluno instanceof AlunoEspecial && aluno.getTurmasMatriculadas().size() >= aluno.getLimiteDisciplinas()) {
-            return false;
-        }
+
+        if (aluno.getTurmasMatriculadas().size() >= aluno.getLimiteDisciplinas()) return false;
 
         alunosMatriculados.add(aluno);
-        notas.add(new Double[]{0.0, 0.0, 0.0, 0.0, 0.0});
-        presencas.add(0);
-        trancamento.put(aluno, false); // inicia como não trancada
+        aluno.adicionarTurma(this); // <- aqui adiciona ao aluno diretamente
         return true;
-    }
+}
 
     public void trancar(Aluno aluno) {
         trancamento.put(aluno, true);

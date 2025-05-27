@@ -28,6 +28,20 @@ public class GerenciadorMatricula {
     public List<Aluno> getAlunos() {
         return alunos;
     }
+    @SuppressWarnings("unchecked")
+    public void carregarDados() {
+    File arquivo = new File("alunos.dat");
+    if (arquivo.exists()) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
+            alunos = (List<Aluno>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar dados dos alunos: " + e.getMessage());
+            alunos = new ArrayList<>();
+        }
+    } else {
+        alunos = new ArrayList<>();
+    }
+}
 
     public void matricularAluno(Scanner scanner) {
         if (alunos.isEmpty()) {
@@ -92,53 +106,69 @@ public class GerenciadorMatricula {
     }
 
     public void trancarDisciplina(Scanner scanner) {
-        if (alunos.isEmpty()) {
-            System.out.println("Não há alunos cadastrados.");
-            return;
-        }
-        if (turmas.isEmpty()) {
-            System.out.println("Não há turmas criadas.");
-            return;
-        }
-
-        System.out.print("Digite a matrícula do aluno: ");
-        String matricula = scanner.nextLine();
-        Aluno aluno = null;
-        for (Aluno a : alunos) {
-            if (a.getMatricula().equals(matricula)) {
-                aluno = a;
-                break;
-            }
-        }
-        if (aluno == null) {
-            System.out.println("Aluno não encontrado.");
-            return;
-        }
-
-        System.out.print("Digite o código da turma a ser trancada: ");
-        String codigoTurma = scanner.nextLine();
-
-        Turma turmaParaTrancar = null;
-        for (Turma t : aluno.getTurmasMatriculadas()) {
-            if (t.getCodigo().equalsIgnoreCase(codigoTurma)) {
-                turmaParaTrancar = t;
-                break;
-            }
-        }
-        if (turmaParaTrancar == null) {
-            System.out.println("Aluno não está matriculado nessa turma.");
-            return;
-        }
-
-        if (turmaParaTrancar.isTrancada(aluno)) {
-            System.out.println("Essa disciplina já está trancada para o aluno.");
-            return;
-        }
-
-        turmaParaTrancar.trancar(aluno);
-        salvarDados(); // salvar após trancamento
-        System.out.println("Disciplina " + turmaParaTrancar.getCodigo() + " trancada com sucesso para o aluno " + aluno.getNome());
+    System.out.println("Matrículas cadastradas:");
+    for (Aluno a : alunos) {
+        System.out.println("- " + a.getMatricula());
     }
+
+    if (alunos.isEmpty()) {
+        System.out.println("Não há alunos cadastrados.");
+        return;
+    }
+    if (turmas.isEmpty()) {
+        System.out.println("Não há turmas criadas.");
+        return;
+    }
+
+    System.out.print("Digite a matrícula do aluno: ");
+    String matricula = scanner.nextLine();
+    Aluno aluno = null;
+    for (Aluno a : alunos) {
+        if (a.getMatricula().equals(matricula)) {
+            aluno = a;
+            break;
+        }
+    }
+
+    if (aluno == null) {
+        System.out.println("Aluno não encontrado.");
+        return;
+    }
+
+    // Mostrar turmas em que o aluno está matriculado
+    System.out.println("Turmas em que o aluno está matriculado:");
+    for (Turma t : aluno.getTurmasMatriculadas()) {
+        System.out.println("- " + t.getCodigo() + " (" + t.getDisciplina().getNome() + ")");
+    }
+
+    System.out.print("Digite o código da turma a ser trancada: ");
+    String codigoTurma = scanner.nextLine();
+
+    Turma turmaParaTrancar = null;
+    for (Turma t : aluno.getTurmasMatriculadas()) {
+        if (t.getCodigo().equalsIgnoreCase(codigoTurma)) {
+            turmaParaTrancar = t;
+            break;
+        }
+    }
+
+    if (turmaParaTrancar == null) {
+        System.out.println("Aluno não está matriculado nessa turma.");
+        return;
+    }
+
+    if (turmaParaTrancar.isTrancada(aluno)) {
+        System.out.println("Essa disciplina já está trancada para o aluno.");
+        return;
+    }
+
+    // Atualiza tanto o lado da turma quanto o lado do aluno
+    aluno.trancarTurma(turmaParaTrancar);
+    turmaParaTrancar.trancar(aluno);
+
+    salvarDados(); // salvar após trancamento
+    System.out.println("Disciplina " + turmaParaTrancar.getCodigo() + " trancada com sucesso para o aluno " + aluno.getNome());
+}
 
     public void salvarDados() {
         salvarObjeto(ARQUIVO_TURMAS, turmas);

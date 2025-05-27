@@ -65,12 +65,13 @@ public abstract class Aluno implements Serializable {
 
     public void trancarTurma(Turma turma) {
         if (turmasMatriculadas.contains(turma) && !turmasTrancadas.contains(turma)) {
-            turmasTrancadas.add(turma);
+            turmasMatriculadas.remove(turma);  // Remover da lista de matriculadas
+            turmasTrancadas.add(turma);        // Adicionar à lista de trancadas
             System.out.println("Turma trancada com sucesso.");
-        } else {
+    }   else {
             System.out.println("Turma não encontrada ou já trancada.");
-        }
     }
+}
     public void removerDisciplinaAprovada(Disciplina disciplina) {
         disciplinasAprovadas.remove(disciplina);
 }
