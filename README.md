@@ -19,10 +19,10 @@ O enunciado do trabalho pode ser encontrado aqui:
 ## Instruções para Compilação e Execução
 
 1. **Compilação:**  
-   [Descrever aqui como compilar o projeto. Exemplo: `javac Main.java` ou o script usado]
+   [Descrever aqui como compilar o projeto. Exemplo: `compilado pelo vsc` ou o script usado]
 
 2. **Execução:**  
-   [Descrever aqui como executar o projeto. Exemplo: `java Main` ou o script usado]
+   [Descrever aqui como executar o projeto. Exemplo: `executado pelo executar do vsc` ou o script usado]
 
 3. **Estrutura de Pastas:**  
    [O Main ficou dentro da raiz junto com as prints e os arquivos.dat, criei uma pasta modelo para as classes normais, uma pasta controle onde ficam as classes gerenciadoras, e a pasta util onde fica o ArquivoUtils]
